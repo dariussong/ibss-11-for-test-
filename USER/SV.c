@@ -96,11 +96,11 @@ void pid_value_init(void)
 {
   Kp = 2;
   Ki = 0.2;
-  Kd = 1.2;
+  Kd = 2;
   err = 0;
 	err_last = 0;
 	integral = 0;
-	target_p = 30;
+	target_p = 50;
 }
 
 void SV_ESTIMATE(void)
@@ -110,10 +110,10 @@ void SV_ESTIMATE(void)
 		if(sv_flag[i]==1)
 		{
 			
-			P[3] = 50*(3.3*adc1/65536-2.5);
-			P[1] = 50*(3.3*adc2/65536-2.5);
-			P[0] = 50*(3.3*adc3/65536-2.5);
-			P[2] = 50*(3.3*adc4/65536-2.5);
+			P[3] = 80*(3.3*adc1/65536-1.45);
+			P[1] = 80*(3.3*adc2/65536-1.45);
+			P[0] = 80*(3.3*adc3/65536-1.45);
+			P[2] = 80*(3.3*adc4/65536-1.45);
 			actual_p = P[i];
 			
 			err = target_p - actual_p;
@@ -125,7 +125,7 @@ void SV_ESTIMATE(void)
 			p = Kp * err + Ki*integral + Kd*(err - err_last);
 			err_last = err;
 			actual_p = p + actual_p;
-			speed = 3*(actual_p-10);
+			speed = 1.5*actual_p-5;
 			TIM_SetCompare1(&TIM16_Handler,speed);
 			integral = 0;
 			break;
